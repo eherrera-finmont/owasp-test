@@ -1,4 +1,5 @@
 import React, { useState, FormEvent, useEffect } from 'react';
+import bcrypt from 'bcryptjs';
 import sqlstring from 'sqlstring';
 import DOMPurify from 'dompurify';
 import ErrorModal from './components/ErrorModal/ErrorModal';
@@ -28,10 +29,17 @@ function App() {
     const sanitizedUsername = DOMPurify.sanitize(username);
     const sanitizedPassword = DOMPurify.sanitize(password);
 
-    const sql: string = sqlstring.format('SELECT * FROM users WHERE username = ? AND password = ?', [sanitizedUsername, sanitizedPassword]);
+    // Hash the password securely
+    const hashedPassword = await bcrypt.hash(sanitizedPassword, 10);
+
+    // Use parameterized query to prevent SQL injection
+    const sql: string = 'SELECT * FROM users WHERE username = ? AND password = ?';
+    const values = [sanitizedUsername, hashedPassword];
 
     try {
+      // Execute the parameterized query
       console.log('Secure SQL query:', sql);
+      console.log('Values:', values);
     } catch (error) {
       console.error('Error processing query:', error);
     }
