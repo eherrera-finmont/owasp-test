@@ -3,12 +3,14 @@ import bcrypt from 'bcryptjs';
 import sqlstring from 'sqlstring';
 import DOMPurify from 'dompurify';
 import ErrorModal from './components/ErrorModal/ErrorModal';
+import ThreatModelModal from './components/ThreatModelModal/ThreatModelModal'; // New component for threat modeling
 import './App.css';
 
 function App() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [showThreatModel, setShowThreatModel] = useState<boolean>(false); // State to show the threat model modal
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -55,6 +57,10 @@ function App() {
     setError('');
   };
 
+  const toggleThreatModel = () => {
+    setShowThreatModel(!showThreatModel);
+  };
+
   return (
     <div className='container'>
       <h1>Login</h1>
@@ -70,6 +76,10 @@ function App() {
         <button type="submit">Login</button>
       </form>
       {error && <ErrorModal message={error} onClose={closeModal} />}
+      <div className="button-container"> {/* Container for buttons */}
+        <button onClick={toggleThreatModel}>Show Threat Model</button> {/* Button to show the threat model modal */}
+      </div>
+      {showThreatModel && <ThreatModelModal onClose={toggleThreatModel} />} {/* Threat model modal */}
     </div>
   );
 }
