@@ -61,6 +61,25 @@ function App() {
     setShowThreatModel(!showThreatModel);
   };
 
+  const updateComponents = () => {
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
+      body: JSON.stringify({ title: 'Updated components', body: 'This is a test update.' }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // Just to display the response in the console
+        alert('Components updated successfully.');
+      })
+      .catch((error) => {
+        console.error('Error updating components:', error);
+        alert('Failed to update components. Please try again later.');
+      });
+  };
+
   return (
     <div className='container'>
       <h1>Login</h1>
@@ -78,6 +97,7 @@ function App() {
       {error && <ErrorModal message={error} onClose={closeModal} />}
       <div className="button-container"> {/* Container for buttons */}
         <button onClick={toggleThreatModel}>Show Threat Model</button> {/* Button to show the threat model modal */}
+        <button onClick={updateComponents} className="update-button">Update Components</button> {/* Button to update components */}
       </div>
       {showThreatModel && <ThreatModelModal onClose={toggleThreatModel} />} {/* Threat model modal */}
     </div>
